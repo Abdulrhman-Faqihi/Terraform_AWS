@@ -1,7 +1,7 @@
 provider "aws" {
-  region     = "us-east-1"
-  access_key = ""
-  secret_key = ""
+  region     = var.region
+  access_key = var.access_key
+  secret_key = var.secret_key
 }
 
 #Create VPC
@@ -189,10 +189,10 @@ resource "aws_lb_listener" "app_lb_listener" {
 
 
 resource "aws_instance" "first" {
-  ami           = ""
-  instance_type = "t2.micro"
+  ami           = var.ami_id
+  instance_type = var.instance_type
   subnet_id     = aws_subnet.public_subnet_1.id
-  key_name      = "tes"
+  key_name      = var.ami_key_pair_name
   security_groups = [ aws_security_group.allow_ssh.id ]
   associate_public_ip_address = true
   root_block_device {
@@ -228,10 +228,10 @@ resource "aws_instance" "first" {
 }
 
 resource "aws_instance" "first1" {
-  ami           = ""
-  instance_type = "t2.micro"
+  ami           = var.ami_id
+  instance_type = var.instance_type
   subnet_id     = aws_subnet.public_subnet_2.id
-  key_name      = "tes"
+  key_name      = var.ami_key_pair_name
   security_groups = [ aws_security_group.allow_ssh.id ]
   associate_public_ip_address = true
   root_block_device {
@@ -261,13 +261,13 @@ resource "aws_instance" "first1" {
 
 resource "aws_db_instance" "mysql_rds" {
   allocated_storage    = 20
-  engine               = "mysql"
-  engine_version       = "8.0"
-  instance_class       = "db.t3.small"
-  db_name              = "lockers"
-  username             = "admin"
-  password             = "Password1231"  
-  parameter_group_name = "default.mysql8.0"
+  engine               = var.engine
+  engine_version       = var.engine_version
+  instance_class       = var.instance_class
+  db_name              = var.database_name
+  username             = var.database_username
+  password             = var.database_password 
+  parameter_group_name = var.parameter_group_name
   db_subnet_group_name = aws_db_subnet_group.rds_subnet_group.name
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
   skip_final_snapshot  = true 
@@ -282,22 +282,4 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
   tags = {
     Name = "Faqehi RDS Subnet Group"
   }
-}
-
-output "ec2_instance_public_ip" {
-  value = aws_instance.first.public_ip
-
-}
-output "ec2_instance_public_i" {
-  value = aws_instance.first1.public_ip
-
-}
-
-
-output "aws_db_instance" {
-  value = aws_db_instance.mysql_rds.endpoint
-}
-
-output "load_balancer_dns" {
-  value = aws_lb.app_lb.dns_name
 }
