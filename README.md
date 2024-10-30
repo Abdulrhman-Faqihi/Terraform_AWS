@@ -48,7 +48,7 @@ terraform apply -auto-approve
 ## Accessing Your Cluster
 * You can access your cluster by accessing the master node throw <b>ssh</b>, you can get the public IP of master node from terrform outputs. Below is example of ssh command:
 ``` shell
-ssh -i <Your_Key_Piar> ec2-user@<MasterNode_Public_IP>
+ssh -i <Your_Key_Piar> ec2-user@<Public_IP>
 ```
 
 ## Removing and Destroying AWS Resources
